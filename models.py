@@ -19,3 +19,9 @@ class User(db.Model):
     image_url = db.Column(db.String(99), 
                         nullable=False,
                         default='http://placekitten.com/400/400')
+
+    def __repr__(self):
+        """Show info about pet."""
+
+        u = self
+        return f"<Pet {u.id} {u.first_name} {u.last_name} {u.image_url}>"
