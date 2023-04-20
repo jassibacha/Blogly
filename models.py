@@ -21,10 +21,10 @@ class User(db.Model):
                         default='http://placekitten.com/400/400')
 
     def __repr__(self):
-        """Show info about pet."""
+        """Show info about user."""
 
         u = self
-        return f"<Pet {u.id} {u.first_name} {u.last_name} {u.image_url}>"
+        return f"<User {u.id} {u.first_name} {u.last_name} {u.image_url}>"
 
 
     def get_full_name(self):
