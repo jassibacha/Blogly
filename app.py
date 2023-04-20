@@ -31,7 +31,7 @@ def users_list():
 @app.route('/users/new')
 def users_new():
     """Form to add new user"""
-    return render_template('new.html')
+    return render_template('new-user.html')
 
 # POST /users/new: Process the add form, adding a new user and going back to /users
 @app.route('/users/new', methods=["POST"])
@@ -43,7 +43,7 @@ def users_create():
     new_user = User(first_name=first_name, last_name=last_name, image_url=image_url)
     db.session.add(new_user)
     db.session.commit()
-    flash(f'{new_user.first_name} {new_user.last_name} has been created.', 'success')
+    flash(f'{new_user.get_full_name()} has been created.', 'success')
     return redirect('/')
 
 # GET /users/[user-id]: Show information about the given user. Have a button to get to their edit page, and to delete the user.
@@ -75,7 +75,7 @@ def update_user(user_id):
     user.last_name = request.form['last_name']
     user.image_url = request.form['image_url']
     db.session.commit()
-    flash(f'{user.first_name} {user.last_name} has been edited', 'success')
+    flash(f'{user.get_full_name()} has been edited', 'success')
     return redirect(f'/users/{user_id}')
 
 # POST /users/[user-id]/delete: Delete the user.
@@ -85,5 +85,5 @@ def delete_user(user_id):
     user = User.query.get_or_404(user_id)
     db.session.delete(user)
     db.session.commit()
-    flash(f'{user.first_name} {user.last_name} has been deleted', 'success')
+    flash(f'{user.get_full_name()} has been deleted', 'success')
     return redirect('/users')

@@ -25,3 +25,9 @@ class User(db.Model):
 
         u = self
         return f"<Pet {u.id} {u.first_name} {u.last_name} {u.image_url}>"
+
+
+    def get_full_name(self):
+        """Return the full name of the user."""
+
+        return f"{self.first_name} {self.last_name}"
