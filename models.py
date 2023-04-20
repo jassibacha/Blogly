@@ -16,7 +16,7 @@ class User(db.Model):
 
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
-    image_url = db.Column(db.String(99), 
+    image_url = db.Column(db.String(399), 
                         nullable=False,
                         default='http://placekitten.com/400/400')
 
