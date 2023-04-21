@@ -6,6 +6,7 @@
         <p class="fw-bold">
             Posted by
             <a href="/users/{{post.user.id}}">{{post.user.full_name()}}</a>
+            on {{post.friendly_date()}}
         </p>
         <p>{{post.content}}</p>
         <a href="/posts/{{post.id}}/edit" class="btn btn-primary">Edit</a>

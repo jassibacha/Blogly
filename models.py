@@ -1,5 +1,6 @@
 """Models for Blogly."""
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -46,3 +47,7 @@ class Post(db.Model):
         """Show info about post."""
         p = self
         return f"<Post id={p.id} user_id={p.user_id} title={p.title}>"
+
+    def friendly_date(self):
+        """Return the created_at date in an actually readable format"""
+        return self.created_at.strftime('%B %d, %Y')

@@ -14,11 +14,12 @@ debug = DebugToolbarExtension(app)
 connect_db(app)
 db.create_all()
 
-# GET /: Redirect to list of users. (We’ll fix this in a later step).
+# GET /: Homepage
 @app.route('/')
 def home():
-    """Show list of all users"""
-    return redirect('/users')
+    posts = Post.query.order_by(Post.created_at.desc()).limit(5).all()
+    """Show list of posts"""
+    return render_template('home.html', posts=posts)
 
 # GET /users: Show all users. Make these links to view the detail page for the user. Have a link here to the add-user form.
 @app.route('/users')
@@ -106,7 +107,7 @@ def create_post(user_id):
     new_post = Post(title=title, content=content, user=user)
     db.session.add(new_post)
     db.session.commit()
-    flash(f'"{post.title}" has been created', 'success')
+    flash(f'"{new_post.title}" has been created', 'success')
     return redirect(f'/posts/{new_post.id}')
 
 # GET /posts/[post-id] : Show a post. Show buttons to edit and delete the post.
@@ -134,4 +135,16 @@ def update_post(post_id):
     db.session.commit()
     flash(f'"{post.title}" has been edited.', 'success')
     return redirect(f'/posts/{post_id}')
+
 # POST /posts/[post-id]/delete : Delete the post.
+@app.route('/posts/<int:post_id>/delete')
+def delete_post(post_id):
+    """Delete the post"""
+    post = Post.query.get_or_404(post_id)
+    print(post)
+    temp_id = post.user.id
+    print('**** ID', temp_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash(f'"{post.title}" has been deleted', 'success')
+    return redirect(f'/users/{temp_id}')

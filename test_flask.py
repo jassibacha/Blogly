@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from app import app
-from models import db, User
+from models import db, User, Post
 
 # Use test database and don't clutter tests with SQL
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///users_test'
@@ -82,13 +82,60 @@ class UserViewsTestCase(TestCase):
             
 
     def test_users_create(self):
-        """Test creating a suer"""
+        """Test creating a user"""
         with app.test_client() as client:
             d = {"first_name": "Jane", "last_name": "Doe", "image_url": "https://example.com/image2.jpg"}
             resp = client.post('/users/new', data=d, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('<h1>Users</h1>', html)
             self.assertIn('Jane Doe', html)
-            
+
+
+class PostViewsTestCase(TestCase):
+    """Tests for views for posts."""
+
+    def setUp(self):
+        """Add sample post."""
+
+        User.query.delete()
+
+        user = User(first_name="John", last_name="Doe", image_url="https://example.com/image.jpg")
+        db.session.add(user)
+        db.session.commit()
+
+        self.user_id = user.id
+
+        Post.query.delete()
+
+        post = Post(title="My first post", content="This is my first post content.", created_at="2023-04-17 09:15:32", user_id=1)
+        db.session.add(post)
+        db.session.commit()
+
+        self.post_id = post.id
+
+    def tearDown(self):
+        """Clean up any fouled transaction."""
+
+        db.session.rollback()
+        #User.query.delete() #Here, we create a Post object associated with the User object we created earlier, and then delete the Post object before deleting the User object in the tearDown method.
+        #db.session.commit()
+
+    def test_home(self):
+        """Test the main post list"""
+        with app.test_client() as client:
+            resp = client.get('/')
+            html = resp.get_data(as_text=True)
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('My first post', html)
+
+
+    def test_show_post(self):
+        """Test displaying a single post page"""
+        with app.test_client() as client:
+            resp = client.get(f"/posts/{self.post_id}")
+            html = resp.get_data(as_text=True)
+
+            self.assertEqual(resp.status_code, 200)
+            self.assertIn('<h1>My first post</h1>', html)
+            self.assertIn('This is my first post content.', html)
