@@ -59,7 +59,7 @@ class UserViewsTestCase(TestCase):
         """Test that user is edited correctly"""
         with app.test_client() as client:
             # Send GET request to edit user page
-            resp = client.get('/users/1/edit')
+            resp = client.get(f'/users/{self.user_id}/edit')
             html = resp.get_data(as_text=True)
 
             # Verify that the response contains the correct user information
@@ -73,7 +73,7 @@ class UserViewsTestCase(TestCase):
                 'last_name': 'Smith',
                 'image_url': 'https://example.com/new_image.jpg'
             }
-            resp = client.post('/users/1/edit', data=form_data, follow_redirects=True)
+            resp = client.post(f'/users/{self.user_id}/edit', data=form_data, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
@@ -98,6 +98,7 @@ class PostViewsTestCase(TestCase):
     def setUp(self):
         """Add sample post."""
 
+        Post.query.delete()
         User.query.delete()
 
         user = User(first_name="John", last_name="Doe", image_url="https://example.com/image.jpg")
@@ -106,9 +107,10 @@ class PostViewsTestCase(TestCase):
 
         self.user_id = user.id
 
-        Post.query.delete()
+        #Post.query.delete()
 
-        post = Post(title="My first post", content="This is my first post content.", created_at="2023-04-17 09:15:32", user_id=1)
+        # NOTE: We cannot hard code the user id, it needs to be dynamic. Manually putting 1 broke this.
+        post = Post(title="My first post", content="This is my first post content.", created_at="2023-04-17 09:15:32", user_id=self.user_id)
         db.session.add(post)
         db.session.commit()
 
@@ -118,6 +120,9 @@ class PostViewsTestCase(TestCase):
         """Clean up any fouled transaction."""
 
         db.session.rollback()
+        Post.query.delete()
+        User.query.delete()
+        db.session.commit()
         #User.query.delete() #Here, we create a Post object associated with the User object we created earlier, and then delete the Post object before deleting the User object in the tearDown method.
         #db.session.commit()
 

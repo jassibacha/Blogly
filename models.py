@@ -20,7 +20,7 @@ class User(db.Model):
                         nullable=False,
                         default='http://placekitten.com/400/400')
 
-    posts = db.relationship('Post', backref="user")
+    posts = db.relationship('Post', backref="user", cascade="all, delete")
 
     def __repr__(self):
         """Show info about user."""
