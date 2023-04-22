@@ -1,8 +1,8 @@
 # Blogly Exercise
 
--   Part One: Finished
--   Part Two: Finished
--   Part Three: Finished
+-   Part One: Finished (Viewable in `part-one` branch.)
+-   Part Two: Finished (Viewable in `part-two` branch.)
+-   Part Three: Finished (Viewable in `main` branch.)
 
 ## Unfinished Further Study
 
