@@ -1,6 +1,6 @@
 """Seed file to make sample data for pets db."""
 
-from models import User, Post, db
+from models import User, Post, Tag, PostTag, db
 from app import app
 
 # Create all tables
@@ -65,6 +65,58 @@ for post in posts:
         user_id=post["user_id"]
     )
     db.session.add(p)
+
+# Commit--otherwise, this never gets saved!
+db.session.commit()
+
+
+# If table isn't empty, empty it
+Tag.query.delete()
+
+# Create some sample tags
+tag_names = ['Music', 'Movies', 'Arts', 'Entertainment']
+for name in tag_names:
+    tag = Tag(name=name)
+    db.session.add(tag)
+
+# Commit--otherwise, this never gets saved!
+db.session.commit()
+
+# If table isn't empty, empty it
+PostTag.query.delete()
+
+posts_tags = [
+    {"post_id": 12, "tag_id": 1},
+    {"post_id": 12, "tag_id": 3},
+    {"post_id": 12, "tag_id": 4},
+    {"post_id": 11, "tag_id": 2},
+    {"post_id": 11, "tag_id": 1},
+    {"post_id": 10, "tag_id": 4},
+    {"post_id": 9, "tag_id": 1},
+    {"post_id": 9, "tag_id": 4},
+    {"post_id": 8, "tag_id": 2},
+    {"post_id": 8, "tag_id": 3},
+    {"post_id": 8, "tag_id": 4},
+    {"post_id": 7, "tag_id": 1},
+    {"post_id": 7, "tag_id": 3},
+    {"post_id": 7, "tag_id": 4},
+    {"post_id": 6, "tag_id": 2},
+    {"post_id": 4, "tag_id": 1},
+    {"post_id": 5, "tag_id": 4},
+    {"post_id": 5, "tag_id": 1},
+    {"post_id": 6, "tag_id": 4},
+    {"post_id": 3, "tag_id": 2},
+    {"post_id": 2, "tag_id": 3},
+    {"post_id": 1, "tag_id": 4}
+]
+
+# Add new objects to session, so they'll persist
+for link in posts_tags:
+    l = PostTag(
+        post_id=link["post_id"],
+        tag_id=link["tag_id"]
+    )
+    db.session.add(l)
 
 # Commit--otherwise, this never gets saved!
 db.session.commit()

@@ -22,6 +22,22 @@ endblock %} {% block content %}
             required
         ></textarea>
     </div>
+    <div class="mb-3">
+        <label for="tags" class="form-label">Tags</label>
+        {% for tag in all_tags %}
+        <div class="form-check">
+            <input
+                type="checkbox"
+                name="tags"
+                value="{{tag.id}}"
+                class="form-check-input"
+            />
+            <label class="form-check-label" for="tag-{{tag.id}}"
+                >{{tag.name}}</label
+            >
+        </div>
+        {% endfor %}
+    </div>
     <button type="submit" class="btn btn-primary">Add Post</button>
     <a href="/users/{{user.id}}" class="btn btn-outline-secondary">Cancel</a>
 </form>
